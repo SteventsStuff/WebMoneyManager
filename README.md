@@ -1,0 +1,1 @@
+Inspired by [Money Manager app for Android](https://play.google.com/store/apps/details?id=com.realbyteapps.moneymanagerfree&hl=en&gl=US)
