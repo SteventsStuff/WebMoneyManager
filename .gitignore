@@ -1,5 +1,26 @@
 # IDE folders
 .idea
 
+# SQL TEST
+sql_queries
+
 # files
+*.pyc
+__pycache__/
+
+# tests
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Flask
+instance/
+
+# HZ????
+dist/
+build/
+*.egg-info/
+
+# SQL Lite
 *.sqlite3
+application/database.db
