@@ -5,6 +5,8 @@ from flask import render_template
 
 # DB object to work with
 from application.utils.database import db
+# Migrate class
+from application.utils.migrations import migrate
 # Services
 # Users service
 from application.services.users.views import user_bp
@@ -28,14 +30,9 @@ def create_tables(app) -> None:
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(SECRET_KEY='dev')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.path.join(
-        app.instance_path, 'web_money_manager_DB.sqlite'
-    )
+    app.config['SECRET_KEY'] = 'dev'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@localhost/db_name'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # todo: have no clue what is it
-
-    # register blueprints
-    app.register_blueprint(user_bp)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -50,11 +47,17 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    # create tables in Database
     create_tables(app)
+    migrate.init_app(app, db)
+
+    # register blueprints
+    app.register_blueprint(user_bp)
 
     # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
+    @app.route('/')
+    def index():
+        return render_template('index.html')
 
+    # print(app.url_map)
     return app
