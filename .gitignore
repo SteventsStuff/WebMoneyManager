@@ -8,6 +8,9 @@ sql_queries
 *.pyc
 __pycache__/
 
+# configs
+application/config.py
+
 # tests
 .pytest_cache/
 .coverage

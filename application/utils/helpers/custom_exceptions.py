@@ -1,0 +1,2 @@
+class IncorrectEnvSet(Exception):
+    pass

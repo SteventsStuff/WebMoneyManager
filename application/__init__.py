@@ -3,13 +3,15 @@ import os
 from flask import Flask
 from flask import render_template
 
-# DB object to work with
+# Configs
+from application import config
+# Object to work with DB
 from application.utils.database import db
-# Migrate class
 from application.utils.migrations import migrate
 # Services
-# Users service
 from application.services.users.views import user_bp
+# Helpers
+from utils.helpers.custom_exceptions import IncorrectEnvSet
 
 
 def create_tables(app) -> None:
@@ -27,19 +29,23 @@ def create_tables(app) -> None:
         db.create_all()
 
 
-def create_app(test_config=None):
-    # create and configure the app
+def create_app():
+    # create app
     app = Flask(__name__, instance_relative_config=True)
-    app.config['SECRET_KEY'] = 'dev'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@localhost/db_name'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # todo: have no clue what is it
 
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
+    # select ENV
+    if os.environ.get('FLASK_ENV') == 'development':
+        cfg = config.DevelopmentConfig()
+    elif os.environ.get('FLASK_ENV') == 'production':
+        cfg = config.ProductionConfig()
+    elif os.environ.get('FLASK_ENV') == 'testing':
+        cfg = config.TestingConfig()
     else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)
+        raise IncorrectEnvSet('Incorrect ENV was set!')
+    # configure the app
+    app.config.from_object(cfg)
+    # additional configs
+    app.config['SQLALCHEMY_DATABASE_URI'] = cfg.DATABASE_URI
 
     # ensure the instance folder exists
     try:
@@ -59,5 +65,4 @@ def create_app(test_config=None):
     def index():
         return render_template('index.html')
 
-    # print(app.url_map)
     return app
