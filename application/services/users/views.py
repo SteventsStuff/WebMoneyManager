@@ -6,7 +6,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from application.services.users.models import User
 from application.utils.helpers.view_helper import sign_in_required
 
-user_bp = Blueprint('user_service', __name__, url_prefix='/user', template_folder='templates')
+user_bp = Blueprint('user_service', __name__, url_prefix='/user')
 
 
 @user_bp.before_app_request

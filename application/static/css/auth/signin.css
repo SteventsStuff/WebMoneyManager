@@ -52,8 +52,13 @@ body {
 }
 
 .form-control {
+  color: #bfc1c6;
   background-color: #293042;
   border: 1px solid #33679c;
+}
+
+.form-control:focus {
+  color: #bfc1c6;
 }
 
 #submit {

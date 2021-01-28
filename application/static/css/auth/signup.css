@@ -1,0 +1,29 @@
+@import "signin.css";
+
+.content {
+    margin: 0 auto;
+    width: 500px;
+}
+
+.form-signin {
+    max-width: 400px;
+}
+
+.sign-up-link {
+    margin: 0 auto;
+    width: 239px;
+    padding-top: 20px;
+}
+
+#passwordHelpBlock {
+    margin-bottom: 30px;
+}
+
+#email {
+    border-radius: 0;
+}
+
+.copyright {
+    width: 13%;
+    margin: auto;
+}
