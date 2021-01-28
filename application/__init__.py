@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from flask import render_template
+from flask_debugtoolbar import DebugToolbarExtension
 
 # Configs
 from application import config
@@ -57,6 +58,9 @@ def create_app():
     # create tables in Database
     create_tables(app)
     migrate.init_app(app, db)
+
+    # debug
+    toolbar = DebugToolbarExtension(app)
 
     # register blueprints
     app.register_blueprint(user_bp)
