@@ -24,6 +24,9 @@ dist/
 build/
 *.egg-info/
 
+# migrations
+migrations/
+
 # SQL Lite
 *.sqlite3
 application/database.db

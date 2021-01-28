@@ -11,7 +11,8 @@ from application.utils.migrations import migrate
 # Services
 from application.services.users.views import user_bp
 # Helpers
-from utils.helpers.custom_exceptions import IncorrectEnvSet
+from application.utils.helpers.custom_exceptions import IncorrectEnvSet
+from application.utils.helpers.view_helper import sign_in_required
 
 
 def create_tables(app) -> None:
@@ -62,6 +63,7 @@ def create_app():
 
     # a simple page that says hello
     @app.route('/')
+    @sign_in_required
     def index():
         return render_template('index.html')
 

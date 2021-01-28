@@ -1,16 +1,72 @@
 {% extends "base.html" %}
+{% block title %} - Sign in{% endblock %}
+
+{% block head %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.79.0">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='assets/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/signin.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
-  <h1>Login</h1>
-  {% if error %}
-    <p class=error><strong>Error:</strong> {{ error }}
-  {% endif %}
-  <form method=post>
-    <dl>
-      <dt>Username:
-      <dd><input type=text name=username value="{{request.form.username }}">
-      <dt>Password:
-      <dd><input type=password name=password>
-    </dl>
-    <p><input type=submit value=Login>
-  </form>
+    <main class="form-signin">
+        <img class="mb-4" src="{{ url_for('static', filename='assets/brand/logo.png') }}" alt="Logo" width="75" height="72">
+        <form method="post">
+            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Error:</strong> {{ message }}
+                </div>
+            {% endfor %}
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-defaul"><ion-icon name="person-outline"></ion-icon></span>
+                <input name="username" id="username" type="text" class="form-control" placeholder="Username"
+                       aria-label="Username"
+                       aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-small"><ion-icon
+                        name="key-outline"></ion-icon></span>
+                <input name="password" type="password" id="password" class="form-control" placeholder="Password"
+                       required>
+            </div>
+
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" id="submit" type="submit">Sign in</button>
+            <div class="sign-in-link">
+                <p class="fs-6">Do not have account? <a href="{{ url_for('user_service.sign_up') }}" class="text-decoration-none">Create</a></p>
+            </div>
+            <div class="copyright">
+                <p class="mt-5 mb-3 text-muted">&copy; Kek</p>
+            </div>
+        </form>
+    </main>
 {% endblock %}
