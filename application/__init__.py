@@ -2,18 +2,21 @@ import os
 
 from flask import Flask
 from flask import render_template
+from flask_migrate import Migrate
 from flask_debugtoolbar import DebugToolbarExtension
 
 # Configs
 from application import config
 # Object to work with DB
 from application.utils.database import db
-from application.utils.migrations import migrate
 # Services
 from application.services.users.views import user_bp
 # Helpers
 from application.utils.helpers.custom_exceptions import IncorrectEnvSet
 from application.utils.helpers.view_helper import sign_in_required
+
+
+migrate = Migrate()
 
 
 def create_tables(app) -> None:
@@ -27,7 +30,6 @@ def create_tables(app) -> None:
     """
     db.init_app(app)
     with app.app_context():
-        from application.services.users.models import User
         db.create_all()
 
 
