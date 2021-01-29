@@ -1,10 +1,10 @@
 from flask import Blueprint
 from flask import render_template, redirect, flash
 from flask import request, session, url_for, g
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask_login import current_user, login_user, logout_user
 
 from application.services.users.models import User
-from application.utils.helpers.view_helper import sign_in_required
+from application.utils.login import login
 
 user_bp = Blueprint('user_service', __name__, url_prefix='/user')
 
@@ -21,6 +21,9 @@ def load_signed_in_user():
 
 @user_bp.route('/signup', methods=('GET', 'POST'))
 def sign_up():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -36,7 +39,8 @@ def sign_up():
             error = f'User {username} is already exists'
 
         if error is None:
-            new_user = User(username=username, password=generate_password_hash(password), email=email)
+            new_user = User(username=username, email=email)
+            new_user.set_password(password)
             new_user.save_to_db()
             return redirect(url_for('user_service.sign_in'))
         
@@ -47,6 +51,9 @@ def sign_up():
 
 @user_bp.route('/signin', methods=('GET', 'POST'))
 def sign_in():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -55,12 +62,11 @@ def sign_in():
         user = User.query.filter_by(username=username).first()
         if user is None:
             error = 'Incorrect username!'
-        elif not check_password_hash(user.password, password):
+        elif not user.check_password(password):
             error = 'Incorrect password!'
 
         if error is None:
-            session.clear()
-            session['user_id'] = user.id
+            login_user(user)
             return redirect(url_for('index'))
 
         flash(error)
@@ -70,14 +76,11 @@ def sign_in():
 
 @user_bp.route('/signout')
 def sign_out():
-    session.clear()
+    logout_user()
     return redirect(url_for('index'))
 
 
-if __name__ == '__main__':
-    from application import create_app
-    app = create_app()
-    with app.app_context():
-        # user = User(username='u1', email='test@test.com', password='test')
-        users = User.query.all()
-        print(users)
+@login.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+

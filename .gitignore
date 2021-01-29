@@ -27,3 +27,5 @@ build/
 # SQL Lite
 *.sqlite3
 application/database.db
+
+/web_money_manager

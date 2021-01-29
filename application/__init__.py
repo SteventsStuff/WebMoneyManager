@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 from flask import render_template
-from flask_migrate import Migrate
+from flask_login import login_required
 from flask_debugtoolbar import DebugToolbarExtension
 
 # Configs
@@ -12,11 +12,10 @@ from application.utils.database import db
 # Services
 from application.services.users.views import user_bp
 # Helpers
+from application.utils.login import login
+from application.utils.migrate import migrate
 from application.utils.helpers.custom_exceptions import IncorrectEnvSet
 from application.utils.helpers.view_helper import sign_in_required
-
-
-migrate = Migrate()
 
 
 def create_tables(app) -> None:
@@ -59,7 +58,10 @@ def create_app():
 
     # create tables in Database
     create_tables(app)
+
     migrate.init_app(app, db)
+    login.init_app(app)
+    login.login_view = 'user_service.sign_in'
 
     # debug
     toolbar = DebugToolbarExtension(app)
@@ -69,7 +71,7 @@ def create_app():
 
     # a simple page that says hello
     @app.route('/')
-    @sign_in_required
+    @login_required
     def index():
         return render_template('index.html')
 
