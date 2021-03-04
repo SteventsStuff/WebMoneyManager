@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, g, session
 from flask import render_template
 from flask_login import login_required
 from flask_debugtoolbar import DebugToolbarExtension

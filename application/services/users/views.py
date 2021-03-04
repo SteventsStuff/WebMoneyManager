@@ -9,16 +9,6 @@ from application.utils.login import login
 user_bp = Blueprint('user_service', __name__, url_prefix='/user')
 
 
-@user_bp.before_app_request
-def load_signed_in_user():
-    user_id = session.get('user_id')
-
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = User.query.filter_by(id=user_id).first()
-
-
 @user_bp.route('/signup', methods=('GET', 'POST'))
 def sign_up():
     if current_user.is_authenticated:

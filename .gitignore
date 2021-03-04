@@ -28,4 +28,7 @@ build/
 *.sqlite3
 application/database.db
 
+.DS_Store
+
 /web_money_manager
+/playground

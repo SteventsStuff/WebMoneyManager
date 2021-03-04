@@ -4,6 +4,7 @@ from flask import g
 from flask import redirect, url_for
 
 
+# not used for now
 def sign_in_required(view):
     @functools.wraps(view)
     def wrapper(**kwargs):
